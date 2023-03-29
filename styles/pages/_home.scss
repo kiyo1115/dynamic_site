@@ -1,0 +1,408 @@
+@use "../globals/index" as *;
+@use "../parts/common" as *;
+
+#main-content {
+  position: relative;
+  z-index: 0;
+}
+
+main {
+  position: relative;
+  z-index: -1;
+}
+
+#container {
+  background-color: $cWhite;
+  position: relative;
+  z-index: 10;
+
+  transition: transform 0.5s, box-shadow 0.5s;
+}
+
+.header {
+  position: fixed; //ヘッダーがついてくるようになる
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: $navHeight;
+  background-color: transparent;
+  display: flex;
+  align-items: center;
+  z-index: 100;
+
+  &.triggerd {
+    background-color: rgba(255, 255, 255, 0.9);
+    /* offset-x | offset-y | blur-radius | spread-radius | color */
+    box-shadow: 10px 0 25px -10px rgba(0, 0, 0, 0.5);
+  }
+
+  &__inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    @extend .content-width;
+  }
+
+  &__nav {
+    @extend .flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+
+    display: none; //960px以下のときには表示させないようにし
+
+    @include mq(lg) {
+      display: block; //960px以上のときには表示させる
+    }
+  }
+
+  &__ul {
+    display: flex;
+    align-items: center;
+    list-style: none;
+    padding: 0;
+  }
+
+  &__li {
+    margin: 10px;
+
+    @include mq(md) {
+      margin-left: 30px;
+      margin-right: 0px;
+    }
+
+    & a {
+      color: $cBlack;
+      text-decoration: none;
+      text-transform: uppercase; //文字を大文字にする
+    }
+  }
+
+  & .logo {
+    font-size: 35px;
+    justify-content: center; //text-alignではなくflexで揃えているのでjustify-contentを使用する
+
+    @include mq(md) {
+      justify-content: flex-start;
+    }
+  }
+}
+
+.hero {
+  @extend .pb-lg;
+}
+
+.travel {
+  @extend .content-width;
+  @extend .mb-lg;
+
+  &__inner {
+    @extend .flex;
+    position: relative;
+    z-index: 0;
+    justify-content: space-between;
+    background-color: $cBgGray;
+    padding: 15px; //スマホのときは15pxの余白を開ける
+
+    @include mq(md) {
+      padding: 50px; //600px以上のときは50pxの余白をあける
+    }
+    @include mq(xl) {
+      padding: 50px 150px; //600px以上のときは50pxの余白をあける
+    }
+  }
+  &__img {
+    height: 300px; //スマホのときの高さ
+    @extend .mb-sm;
+    transition: box-shadow 0.5s ease 1.6s;
+
+    &.inview{
+      // /* offset-x | offset-y | blur-radius | color */の値となっている
+      box-shadow: inset 0 0 30px $cBlack;
+    }
+
+    @include mq(md) {
+      flex-basis: 47%;
+    }
+
+    @include mq(lg) {
+      height: 400px; //960px以上のとき
+    }
+    & img {
+      position: relative;
+      z-index: -1;
+      opacity: 1;
+      object-fit: cover;
+      width: 100%;
+      height: 100%; //travel__imgの設定したheightの大きさを超えないようになる
+    }
+  }
+  &__texts {
+    @extend .pb-sm;
+    @include mq(md) {
+      display: flex;
+      align-items: flex-end;
+      flex-basis: 47%;
+    }
+
+    &.inview {
+      & .travel__title::before {
+        @include animation($name: scaleX, $duration: 0.3s, $delay: 1.3s);
+      }
+    }
+  }
+
+  &__title {
+    position: relative;
+
+    &::before {
+      display: none; //スマホ時には表示されないようにする
+      position: absolute;
+      content: "";
+      height: 1px;
+      width: 100px;
+      top: 50%;
+      left: -120px;
+      background-color: $cBlack;
+      transform: scale(0);
+      transform-origin: right; //右側を起点としたアニメーション
+
+      @include mq(lg) {
+        display: block; //960px以上は表示する
+      }
+    }
+  }
+
+  &__description {
+    @include mq(lg) {
+      margin-bottom: 40px;
+    }
+  }
+}
+
+@keyframes scaleX {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.houses {
+  @extend .content-width;
+  @extend .mb-lg;
+
+  &__title {
+    @extend .mb-sm;
+    @extend .font-lr;
+  }
+
+  &__btn {
+    text-align: center;
+    flex-basis: 100%;
+  }
+
+  &__inner {
+    @extend .flex;
+  }
+
+  &__item {
+    @include mq(md) {
+      flex-basis: 50%;
+    }
+    // width: 50%;//こちらでも可だが、優先順位がbasisのほうが上
+    @include mq(lg) {
+      margin-bottom: 60px;
+    }
+  }
+}
+
+.popular {
+  &__header {
+    @extend .content-width;
+  }
+
+  &__inner {
+    position: relative;
+
+    &::before {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      height: 90%;
+      width: 100%;
+      background-color: $cBgGray;
+    }
+  }
+  &__container {
+    position: relative;
+    z-index: 2;
+    @extend .flex;
+    @extend .content-width;
+
+    justify-content: space-between;
+  }
+  &__item {
+    @include mq(md) {
+      flex-basis: 47%;
+    }
+    @include mq(lg) {
+      flex-basis: 25%; //大きいときは横並びにするために今回は４つの画像のため100/4の25%を設定している
+    }
+    @include mq(xl) {
+      flex-basis: 23%; //大きいときは横並びにするために今回は４つの画像のため100/4の25%を設定している
+    }
+  }
+  &__img {
+    height: 150px;
+    margin-bottom: 5px;
+
+    @include mq(lg) {
+      height: 335px;
+    }
+
+    & img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+  &__title {
+    @extend .mb-sm;
+    @extend .font-md;
+  }
+  &__btn {
+    text-align: center;
+    flex-basis: 100%;
+    @extend .mb-lg;
+  }
+}
+
+.footer {
+  padding: 60px 0;
+  @extend .content-width;
+
+  &__nav {
+    @extend .flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+  }
+
+  &__ul {
+    @extend .flex;
+    list-style: none;
+    padding: 0;
+  }
+
+  &__li {
+    margin: 10px;
+
+    @include mq(md) {
+      margin-left: 0;
+      margin-right: 30px;
+    }
+
+    & a {
+      color: $cSubTitle;
+      text-decoration: none;
+    }
+  }
+
+  & .logo {
+    font-size: 38px;
+    justify-content: center; //text-alignではなくflexで揃えているのでjustify-contentを使用する
+
+    @include mq(md) {
+      justify-content: flex-start;
+    }
+  }
+}
+
+.logo {
+  font-size: 42px;
+  display: flex;
+
+  &__img {
+    width: 0.7em;
+  }
+
+  &__world {
+    color: $cWineRed;
+  }
+}
+
+.side {
+  display: none; //スマホでは表示させないため
+  position: fixed;
+  top: 70%;
+  transform: translateY(-50%);
+  transition: all 0.3s ease;
+
+  @include mq(xl) {
+    display: block;
+  }
+
+  & .tween-animate-title {
+    color: $cBlack;
+    text-decoration: none;
+    margin: 0 40px;
+    vertical-align: middle;
+    letter-spacing: 2px;
+  }
+
+  &.left {
+    left: -50px;
+
+    &.inview {
+      left: 50px;
+    }
+
+    & .side__inner {
+      transform-origin: top left;
+      transform: rotate(-90deg);
+    }
+  }
+
+  &.right {
+    right: -50px;
+
+    &.inview {
+      right: 50px;
+    }
+
+    & .side__inner {
+      transform-origin: top right;
+      transform: rotate(90deg);
+    }
+  }
+}
+
+.icon {
+  position: relative; //絶対値を決めるために親要素に基準点を設定
+
+  &::before {
+    content: "";
+    position: absolute; //親要素に対して絶対値を決める
+    top: 50%;
+    left: -20px; //調整時に文字前で丁度いい値を設定
+    width: 1em; //100%だと大量に出てきてしまう
+    height: 1em; //100%だと大量に出てきてしまう
+    transform: translateY(-50%);
+    // background-position: center;
+    // background-repeat: none;
+    background-size: contain; //これだけあればいい？
+  }
+
+  &.twitter::before {
+    //階層の指定の仕方はあくまでscssの階層ではなく、出来上がるcssの場所からのパスを指定する
+    background-image: url("../images/twitter.svg");
+  }
+
+  &.fb::before {
+    //階層の指定の仕方はあくまでscssの階層ではなく、出来上がるcssの場所からのパスを指定する
+    background-image: url("../images/facebook.svg");
+  }
+}
